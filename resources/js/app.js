@@ -7,10 +7,22 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-
+// moment js
+import moment from'moment';
+// vform
+import { Form, HasError, AlertError } from 'vform';
+// vue progress bar
+import VueProgressBar from 'vue-progressbar'
+// route pages
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
+
+// vform
+window.Form = Form;
+Vue.component(HasError.name, HasError)
+Vue.component(AlertError.name, AlertError)
+
 
 let routes = [
     { 
@@ -25,14 +37,30 @@ let routes = [
     }
 ]
 
-
-
 const router = new VueRouter({
     mode: 'history',
     routes // short for `routes: routes`
   })
 
 
+//uppercase the first letter
+Vue.filter('upText', function(text){
+  return text.charAt(0).toUpperCase() + text.slice(1);
+});
+
+//fix the date readable using moment.js
+Vue.filter('myDate', function(created){
+  return moment(created).format('MMMM Do YYYY');
+});
+
+// 
+
+
+Vue.use(VueProgressBar, {
+  color: 'rgb(143, 255, 199)',
+  failedColor: 'red',
+  height: '2px'
+});
 
 /**
  * The following block of code may be used to automatically register your
