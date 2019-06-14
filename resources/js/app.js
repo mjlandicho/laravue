@@ -13,14 +13,23 @@ import moment from'moment';
 import { Form, HasError, AlertError } from 'vform';
 // vue progress bar
 import VueProgressBar from 'vue-progressbar';
-// route pages
+
+//vue import
 import Vue from 'vue';
+// authorization
+import Gate from "./Gate";
+Vue.prototype.$gate = new Gate(window.user);
+
+// route pages
 import VueRouter from 'vue-router';
 Vue.use(VueRouter)
 
 //sweetalert2
 import Swal from 'sweetalert2'
 window.Swal = Swal;
+
+// vue pagination
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 
 // vform
@@ -113,6 +122,11 @@ Vue.component(
 Vue.component(
   'passport-personal-access-tokens',
   require('./components/passport/PersonalAccessTokens.vue').default
+);
+
+Vue.component(
+  'not-found',
+  require('./components/NotFound.vue').default
 );
 
 

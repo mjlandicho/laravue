@@ -19,7 +19,7 @@ height: 250px !important;
                             <h5 class="widget-user-desc">Web Designer</h5>
                         </div>
                         <div class="widget-user-image">
-                            <img class="img-circle" src="" alt="User Avatar">
+                            <img class="img-circle" :src="getProfilePhoto()" alt="User Avatar">
                         </div>
                         <div class="card-footer">
                             <div class="row">
@@ -87,7 +87,9 @@ height: 250px !important;
                         <label for="inputEmail" class="col-sm-2 control-label">Email</label>
 
                         <div class="col-sm-10">
-                          <input v-model="form.email" type="email" class="form-control" id="inputEmail" placeholder="Email">
+                          <input v-model="form.email" type="email" class="form-control" :class="{ 'is-invalid': form.errors.has('email') }"
+                           id="inputEmail" placeholder="Email">
+                          <has-error :form="form" field="email"></has-error>
                         </div>
                       </div>
                       
@@ -108,10 +110,11 @@ height: 250px !important;
                       </div>
                     
                      <div class="form-group">
-                        <label for="inputPass" class="col-sm-2 control-label">Passport</label>
+                        <label for="inputPass" class="col-sm-2 control-label">Password</label>
 
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="inputPass" placeholder="Pass">
+                          <input type="password" v-model="form.password" name="password" class="form-control" :class="{ 'is-invalid': form.errors.has('password') }" id="inputPass" placeholder="Password">
+                          <has-error :form="form" field="password"></has-error>
                         </div>
                       </div>
 
@@ -151,23 +154,43 @@ height: 250px !important;
             }
         },
         methods:{
+            getProfilePhoto(){
+              let photo = (this.form.photo.length > 200) ? this.form.photo : "img/profile/" + this.form.photo;
+              // return "img/profile/" + this.form.photo;
+              return photo;
+            },
             updateInfo(){
+                this.$Progress.start();
                 this.form.put('api/profile')
                 .then(() => {
-
+                Swal.fire(
+                  'Updated!',
+                  'Info has been updated.',
+                  'success'
+                )
+                this.$Progress.finish();
                 })
                 .catch(() => {
-
+                this.$Progress.fail();
                 });
             },
             profilePic(e){
                 let file = e.target.files[0];
+                    console.log(file);
                 let reader = new FileReader();
+                if(file ['size'] < 2111775){
                     reader.onloadend = (file) => {
                     // console.log('RESULT', reader.result)
                     this.form.photo = reader.result;
                     }
                 reader.readAsDataURL(file);
+                }else{
+                  Swal.fire({
+                  type:'error',
+                  title: 'Oops...',
+                  text:'File must be maximum of 2MB only',
+                  })
+                }
             }
         }, 
         mounted() {
