@@ -50,6 +50,9 @@ let routes = [
     },
     { 
     path: '/users', component: require('./components/Users.vue').default 
+    },
+    { 
+    path: '*', component: require('./components/NotFound.vue').default 
     }
 ]
 
@@ -132,5 +135,17 @@ Vue.component(
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    data:{
+      search: ''
+    },
+    methods: {
+      searchit: _.debounce(() => {
+        Fire.$emit('searching');
+      },1000),
+      
+      printMe(){
+        window.print();
+      }
+    }
 });
